@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<meta charset="utf-8">
+<%- include('composants/head') %>
+<body>
+<%- include('composants/menu') %>
+<div id="global">
+	<nav>
+		<ul>
+			<li><a href="http://localhost:8081/peupler"><%= __("peupler") %></a></li>
+			<li><a href="http://localhost:8081/vider"><%= __("vider") %></a></li>
+		</ul>
+	</nav>
+ <table class="tableau">
+ 	<% let noLigne = 0 %>
+	 <% for (elm of adresses) { %>
+
+	 <% if(noLigne == 0){ %>
+		 <tr>
+			 <% noLigne++
+			 for (p in elm ){ %>
+				 <% if(p == "nom" || p == "prenom") { %>
+				 <th><a href='http://localhost:8081/trier/<%= p %>/<%= direction %>'><%= __(p) %></a></th>
+				 <% } %>
+			 <% } %>
+		 </tr>
+	 <% } %>
+
+	 <tr>
+		 <% for (p in elm ){ %>
+		 	<% if(p == "nom" || p == "prenom") { %>
+		 	<td><%= elm[p] %></td>
+		 	<% } %>
+		 <% } %>
+		 <td><a href='/detruire/<%= elm._id %>'><%= __("detruire") %></a></td>
+		 <td><a href="/profilmembre/<%= elm._id %>"><%= __("profil") %></a></td>
+	 </tr>
+	 <% } %>
+ </table>
+ <%- include('composants/formulaire_ajout') %>
+</div>
+<%- include('composants/footer') %>
+</body>
+</html>
