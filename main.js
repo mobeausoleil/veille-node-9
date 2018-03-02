@@ -112,6 +112,17 @@ app.post('/modifier', (req, res) => {
 	});
 });
 
+////////////////////////////////////////////////////modifier-ajax
+
+app.post('/ajax_modifier', (req, res) => {
+	req.body._id = ObjectID(req.body._id);
+	db.collection('adresses').save(req.body, (err, result) => {
+		if (err) return console.log(err);
+		console.log('sauvegarder dans la BD');
+		res.send(JSON.stringify(req.body);
+	});
+});
+
 ///////////////////////////////////////////////////Trier
 app.get('/trier/:cle/:ordre', (req, res) => {
 	let cle = req.params.cle;
