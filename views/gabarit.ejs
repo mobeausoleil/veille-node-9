@@ -48,10 +48,11 @@
 
 	/////////////////////////////////////////////////Détruire
 	let xhr = new XMLHttpRequest();
+	let ajouteUnMembre = false;
 	let elmSup = document.querySelectorAll('.btnSup');
 	for (elm of elmSup){
 		elm.addEventListener('click', function(){
-
+			ajouteUnMembre = false;
 			let laLigne = this.parentNode.parentNode;
 			let id = laLigne.children[0].innerHTML;
 			console.log(id);
@@ -73,12 +74,12 @@
 
 	let elmAjout = document.getElementById('btnAjout');
 	elmAjout.addEventListener('click', function(){
-
+		ajouteUnMembre=true;
 		data = {
-			"nom":"",
-			"prenom":"",
-			"telephone":"",
-			"courriel":""
+			"nom":"Nom",
+			"prenom":"Prenom",
+			"telephone":"Telephone",
+			"courriel":"Courriel"
 		}
 
 		xhr.open('POST', "/ajouter", true);
@@ -87,12 +88,6 @@
 		xhr.send(sData);
 		xhr.addEventListener("readystatechange", traiterRequest, false);
 
-		let tab = document.getElementById("tab");
-		let nouvelleLigne = document.createElement("tr");
-
-		let contenuTr = '<td style="display: none"></td><td>'+data.nom+'</td><td>'+data.prenom+'</td><td><a class="btnSup" href="#"><%= __("detruire") %></a></td><td><a href="/profilmembre/<%= elm._id %>"><%= __("profil") %></a></td>';
-		nouvelleLigne.innerHTML = contenuTr;
-		tab.appendChild(nouvelleLigne);
 	})
 
 	///////////////////////////////////////////////Traitement
@@ -100,6 +95,16 @@
 	function traiterRequest(e){
 		if(xhr.readyState == 4 && xhr.status == 200) {
 			let maReponse = JSON.parse(xhr.responseText);
+
+			if(ajouteUnMembre == true){
+				let tab = document.getElementById("tab");
+				let nouvelleLigne = document.createElement("tr");
+				console.log(maReponse._id);
+
+				let contenuTr = '<td style="display: none">'+maReponse._id+'</td><td>Nom</td><td>Prenom</td><td><a class="btnSup" href="#"><%= __("detruire") %></a></td><td><a href="/profilmembre/'+maReponse._id+'"><%= __("profil") %></a></td>';
+				nouvelleLigne.innerHTML = contenuTr;
+				tab.appendChild(nouvelleLigne);
+			}
 		}
 	}
 

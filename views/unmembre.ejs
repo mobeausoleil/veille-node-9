@@ -34,7 +34,7 @@
 		elm.addEventListener('click', function(){
 
 			xhr = new XMLHttpRequest();
-			xhr.open('GET', "/modifier", true);
+			xhr.open('POST', "/modifier", true);
 
 			let laLigne = this.parentNode.parentNode;
 			let id = laLigne.children[0].innerHTML;
