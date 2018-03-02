@@ -99,7 +99,7 @@ app.get('/detruire/:id', (req, res) => {
 	console.log(critere);
 	db.collection('adresses').findOneAndDelete({"_id": critere}, (err, resultat) => {
 		if (err) return console.log(err);
-		res.redirect('/membres');
+		res.send(JSON.stringify(req.body));
 	});
 });
 
@@ -109,20 +109,20 @@ app.post('/modifier', (req, res) => {
 	db.collection('adresses').save(req.body, (err, result) => {
 		if (err) return console.log(err);
 		console.log('sauvegarder dans la BD');
-		res.redirect('/profilmembre/'+req.body._id);
+		res.send(JSON.stringify(req.body));
 	});
 });
 
 ////////////////////////////////////////////////////modifier-ajax
 
-app.post('/ajax_modifier', (req, res) => {
+/*app.post('/ajax_modifier', (req, res) => {
 	req.body._id = ObjectID(req.body._id);
 	db.collection('adresses').save(req.body, (err, result) => {
 		if (err) return console.log(err);
 		console.log('sauvegarder dans la BD');
 		res.send(JSON.stringify(req.body));
 	});
-});
+});*/
 
 ///////////////////////////////////////////////////Trier
 app.get('/trier/:cle/:ordre', (req, res) => {
