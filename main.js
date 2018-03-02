@@ -87,8 +87,9 @@ app.get('/profil', (req, res) => {
 app.post('/ajouter', (req, res) => {
 	db.collection('adresses').save(req.body, (err, result) => {
 		if (err) return console.log(err);
+		console.log(req.body);
 		console.log('sauvegarder dans la BD');
-		res.redirect('/membres');
+		res.send(JSON.stringify(req.body));
 	});
 });
 

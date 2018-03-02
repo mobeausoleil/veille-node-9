@@ -11,7 +11,7 @@
 			<li><a href="http://localhost:8081/vider"><%= __("vider") %></a></li>
 		</ul>
 	</nav>
- <table class="tableau">
+ <table id="tab" class="tableau">
  	<% let noLigne = 0 %>
 	 <% for (elm of adresses) { %>
 
@@ -23,53 +23,79 @@
 				 <th><a href='http://localhost:8081/trier/<%= p %>/<%= direction %>'><%= __(p) %></a></th>
 				 <% } %>
 			 <% } %>
+			 <th><a id="btnAjout" href='#'><%= __("ajouter") %></a></th>
 		 </tr>
 	 <% } %>
 
 	 <tr>
 		 <% for (p in elm ){ %>
+		 	<% if(p == "_id") { %>
+		 	<td style="display: none"><%= elm[p] %></td>
+			<% } %>
 		 	<% if(p == "nom" || p == "prenom") { %>
 		 	<td><%= elm[p] %></td>
 		 	<% } %>
 		 <% } %>
-		 <td><a class="btnSup" href='/detruire/<%= elm._id %>'><%= __("detruire") %></a></td>
+		 <td><a class="btnSup" href='#'><%= __("detruire") %></a></td>
 		 <td><a href="/profilmembre/<%= elm._id %>"><%= __("profil") %></a></td>
 	 </tr>
 	 <% } %>
  </table>
- <%- include('composants/formulaire_ajout') %>
 </div>
 <%- include('composants/footer') %>
 
 <script type="text/javascript">
 
 	/////////////////////////////////////////////////Détruire
-
+	let xhr = new XMLHttpRequest();
 	let elmSup = document.querySelectorAll('.btnSup');
 	for (elm of elmSup){
 		elm.addEventListener('click', function(){
 
-			xhr = new XMLHttpRequest();
-			xhr.open('POST', "/ajax_modifier", true);
-
 			let laLigne = this.parentNode.parentNode;
 			let id = laLigne.children[0].innerHTML;
-			let nom = laLigne.children[1].innerHTML;
-			let prenom = laLigne.children[2].innerHTML;
-			let telephone = laLigne.children[3].innerHTML;
-			let courriel = laLigne.children[4].innerHTML;
+			console.log(id);
 
 			data = {
 				"_id" : id
 			}
 
-			console.log(data);
+			xhr.open('GET', "/detruire/"+id, true);
 			sData = JSON.stringify(data);
 			xhr.setRequestHeader('Content-type', 'application/json');
 			xhr.send(sData);
+			laLigne.remove();
 			xhr.addEventListener("readystatechange", traiterRequest, false);
 		})
 	}
+
+	///////////////////////////////////////////////Ajouter
+
+	let elmAjout = document.getElementById('btnAjout');
+	elmAjout.addEventListener('click', function(){
+
+		data = {
+			"nom":"",
+			"prenom":"",
+			"telephone":"",
+			"courriel":""
+		}
+
+		xhr.open('POST', "/ajouter", true);
+		sData = JSON.stringify(data);
+		xhr.setRequestHeader('Content-type', 'application/json');
+		xhr.send(sData);
+		xhr.addEventListener("readystatechange", traiterRequest, false);
+
+		let tab = document.getElementById("tab");
+		let nouvelleLigne = document.createElement("tr");
+
+		let contenuTr = '<td style="display: none"></td><td>'+data.nom+'</td><td>'+data.prenom+'</td><td><a class="btnSup" href="#"><%= __("detruire") %></a></td><td><a href="/profilmembre/<%= elm._id %>"><%= __("profil") %></a></td>';
+		nouvelleLigne.innerHTML = contenuTr;
+		tab.appendChild(nouvelleLigne);
+	})
+
+	///////////////////////////////////////////////Traitement
 
 	function traiterRequest(e){
 		if(xhr.readyState == 4 && xhr.status == 200) {
