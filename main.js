@@ -16,6 +16,7 @@ const cookieParser = require('cookie-parser');
 app.set('view engine', 'ejs'); // générateur de template
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 i18n.configure({ 
@@ -119,7 +120,7 @@ app.post('/ajax_modifier', (req, res) => {
 	db.collection('adresses').save(req.body, (err, result) => {
 		if (err) return console.log(err);
 		console.log('sauvegarder dans la BD');
-		res.send(JSON.stringify(req.body);
+		res.send(JSON.stringify(req.body));
 	});
 });
 
